@@ -16,7 +16,7 @@ void InitializeLEDs()
 /*
 * Enable timer and set to interrupt.
 */
-void InitializeTimer()
+void InitializeLEDTimer()
 {
 
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
@@ -27,10 +27,40 @@ void InitializeTimer()
     timerInitStructure.TIM_Period = 1000;
     timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV2;
     timerInitStructure.TIM_RepetitionCounter = 0;
-    TIM_TimeBaseInit(TIM2, &timerInitStructure); // configure timer 4
-    TIM_Cmd(TIM2, ENABLE); // enable the counter for timer 4
+    TIM_TimeBaseInit(TIM2, &timerInitStructure); // configure timer 2
+    TIM_Cmd(TIM2, ENABLE); // enable the counter for timer 2
     TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE); // enable interrupt on timer 4
 }
+
+void InitializeMotorTimer()
+{
+
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+
+    TIM_TimeBaseInitTypeDef timerMotor1InitStructure;
+    timerInitStructure.TIM_Prescaler = 8000;
+    timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    timerInitStructure.TIM_Period = 40;
+    timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV2;
+    timerInitStructure.TIM_RepetitionCounter = 0;
+    TIM_TimeBaseInit(TIM3, &timerMotor1InitStructure); // configure timer 3
+    TIM_Cmd(TIM3, ENABLE); // enable the counter for timer 3
+    TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE); // enable interrupt on timer 3
+
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+
+    TIM_TimeBaseInitTypeDef timerMotor2InitStructure;
+    timerInitStructure.TIM_Prescaler = 8000;
+    timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    timerInitStructure.TIM_Period = 40;
+    timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV2;
+    timerInitStructure.TIM_RepetitionCounter = 0;
+    TIM_TimeBaseInit(TIM4, &timerMotor2InitStructure); // configure timer 4
+    TIM_Cmd(TIM4, ENABLE); // enable the counter for timer 4
+    TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE); // enable interrupt on timer 4
+
+}
+
 
 
 /*
@@ -69,7 +99,8 @@ int main()
 	//motorsInit();
 	//motorsTest();
 	InitializeLEDs();
-    InitializeTimer();
+    InitializeLEDTimer();
+    InitializeMotorTimer();
     InitializeInterrupt();
     while(1);
     return(0);
