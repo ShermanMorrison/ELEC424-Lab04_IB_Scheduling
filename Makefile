@@ -35,9 +35,9 @@ INCLUDE = -I  $(COMMON)/$(STM_LIB)/inc
 INCLUDE += -I $(COMMON)/$(CM3_FIRM) 
 INCLUDE += -I $(COMMON)/$(CM3_FIRM)/$(STARTUP_FIRM) 
 INCLUDE += -I $(COMMON)/$(BLINKY)/inc
-#INCLUDE += -I $(COMMON)/$(DRIVERS)/interface
-#INCLUDE += -I $(COMMON)/$(CONFIG)
-#INCLUDE += -I $(COMMON)/$(FreeRTOS)/include
+INCLUDE += -I $(COMMON)/$(DRIVERS)/interface
+INCLUDE += -I $(COMMON)/$(CONFIG)
+INCLUDE += -I $(COMMON)/$(FreeRTOS)/include
 
 
 # C Files included for this function
@@ -47,7 +47,7 @@ CFILES += $(COMMON)/$(STM_LIB)/src/stm32f10x_tim.c
 CFILES += $(COMMON)/$(STM_LIB)/src/misc.c
 CFILES += $(COMMON)/$(BLINKY)/src/blinky.c
 CFILES += $(COMMON)/$(BLINKY)/src/sys_clk_init.c
-#INCLUDE += $(COMMON)/$(DRIVERS)/src/motors.c
+INCLUDE += $(COMMON)/$(STM_LIB)/src/stm32f10x_dbgmcu.c
 
 # STM chip specific flags
 STFLAGS = -DSTM32F10X_MD -include $(COMMON)/$(BLINKY)/inc/stm32f10x_conf.h
