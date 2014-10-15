@@ -1,6 +1,7 @@
 #include <blinky.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 /*
 * Initialize GPIOB's  GPIO_Pin_5 as a push-pull GPIOB pin.
@@ -117,6 +118,8 @@ void motorsInit()
   isInit = true;
 }
 
+
+
 void motorsSetRatio(int id, uint16_t ratio)
 {
   switch(id)
@@ -143,12 +146,12 @@ void motorsSetRatio(int id, uint16_t ratio)
 void TIM2_IRQHandler()
 {
 	// If interrupt set, reset interrupt and write the toggled led state
-    if (TIM_GetITStatus(TIM2, TIM_IT_Update)!= RESET)
+/*    if (TIM_GetITStatus(TIM2, TIM_IT_Update)!= RESET)
     {
         TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
         led_state = 1-led_state;
         GPIO_WriteBit(GPIOB, GPIO_Pin_5, led_state);
-    }
+    }*/
 }
 
 
