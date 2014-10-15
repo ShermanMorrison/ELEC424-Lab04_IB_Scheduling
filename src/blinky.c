@@ -66,6 +66,8 @@ void TIM4_IRQHandler()
 int main()
 {
 	//SystemInit();
+	motorsInit();
+	motorsTest();
 	InitializeLEDs();
     InitializeTimer();
     InitializeInterrupt();
