@@ -15,7 +15,8 @@ STM_LIB = crazyflie-firmware/lib/STM32F10x_StdPeriph_Driver
 CM3_FIRM = crazyflie-firmware/lib/CMSIS/Core/CM3
 CM3_STM = STM32F10x_StdPeriph_Lib_V3.5.0/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x
 BLINKY = ELEC424-Lab04_IB_Scheduling
-DRIVERS = crazyflie-firmware/drivers/interface
+DRIVERS = crazyflie-firmware/drivers
+FreeRTOS = crazyflie-firmware/lib/FreeRTOS
 
 # Additional directory shortcuts 
 STARTUP_FIRM = startup/gcc
@@ -34,8 +35,9 @@ INCLUDE = -I  $(COMMON)/$(STM_LIB)/inc
 INCLUDE += -I $(COMMON)/$(CM3_FIRM) 
 INCLUDE += -I $(COMMON)/$(CM3_FIRM)/$(STARTUP_FIRM) 
 INCLUDE += -I $(COMMON)/$(BLINKY)/inc
-INCLUDE += -I $(COMMON)/$(DRIVERS)
-INCLUDE += -I $(COMMON)/$(CONFIG)
+#INCLUDE += -I $(COMMON)/$(DRIVERS)/interface
+#INCLUDE += -I $(COMMON)/$(CONFIG)
+#INCLUDE += -I $(COMMON)/$(FreeRTOS)/include
 
 
 # C Files included for this function
@@ -45,6 +47,7 @@ CFILES += $(COMMON)/$(STM_LIB)/src/stm32f10x_tim.c
 CFILES += $(COMMON)/$(STM_LIB)/src/misc.c
 CFILES += $(COMMON)/$(BLINKY)/src/blinky.c
 CFILES += $(COMMON)/$(BLINKY)/src/sys_clk_init.c
+#INCLUDE += $(COMMON)/$(DRIVERS)/src/motors.c
 
 # STM chip specific flags
 STFLAGS = -DSTM32F10X_MD -include $(COMMON)/$(BLINKY)/inc/stm32f10x_conf.h
