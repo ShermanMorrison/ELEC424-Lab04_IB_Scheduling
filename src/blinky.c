@@ -1,6 +1,7 @@
 #include <blinky.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 /*
 * Initialize GPIOB's  GPIO_Pin_5 as a push-pull GPIOB pin.
@@ -118,23 +119,6 @@ void motorsInit()
   isInit = true;
 }
 
-bool motorsTest(void)
-{
-#ifndef BRUSHLESS_MOTORCONTROLLER
-  int i;
-
-  for (i = 0; i < sizeof(MOTORS) / sizeof(*MOTORS); i++)
-  {
-    motorsSetRatio(MOTORS[i], MOTORS_TEST_RATIO);
-    //vTaskDelay(M2T(MOTORS_TEST_ON_TIME_MS));
-    motorsSetRatio(MOTORS[i], 0);
-    //vTaskDelay(M2T(MOTORS_TEST_DELAY_TIME_MS));
-  }
-#endif
-
-  return isInit;
-}
-
 
 void motorsSetRatio(int id, uint16_t ratio)
 {
@@ -162,12 +146,12 @@ void motorsSetRatio(int id, uint16_t ratio)
 void TIM2_IRQHandler()
 {
 	// If interrupt set, reset interrupt and write the toggled led state
-    if (TIM_GetITStatus(TIM2, TIM_IT_Update)!= RESET)
+/*    if (TIM_GetITStatus(TIM2, TIM_IT_Update)!= RESET)
     {
         TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
         led_state = 1-led_state;
         GPIO_WriteBit(GPIOB, GPIO_Pin_5, led_state);
-    }
+    }*/
 }
 
 /*
@@ -179,8 +163,14 @@ void TIM3_IRQHandler()
     if (TIM_GetITStatus(TIM3, TIM_IT_Update)!= RESET)
     {
         TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
-        led_state = 1-led_state;
+        TIM3_MOTOR_STATE = 1;
+        led_state = 0;
         GPIO_WriteBit(GPIOB, GPIO_Pin_5, led_state);
+        //if (TIM3_MOTOR_STATE == 1)
+        //{
+    		motorsSetRatio(MOTORS[0], MOTORS_TEST_RATIO);
+    		motorsSetRatio(MOTORS[1], MOTORS_TEST_RATIO);
+		//}
     }
 }
 
@@ -190,12 +180,19 @@ void TIM3_IRQHandler()
 void TIM4_IRQHandler()
 {
         // If interrupt set, reset interrupt and write the toggled led state
-    if (TIM_GetITStatus(TIM3, TIM_IT_Update)!= RESET)
+    if (TIM_GetITStatus(TIM4, TIM_IT_Update)!= RESET)
     {
-        TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
-        led_state = 1-led_state;
+        TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
+        TIM4_MOTOR_STATE = 1-TIM4_MOTOR_STATE;
+        
+        led_state = 0;
         GPIO_WriteBit(GPIOB, GPIO_Pin_5, led_state);
-    }
+        if (TIM4_MOTOR_STATE == 1)
+        {
+    		motorsSetRatio(MOTORS[2], MOTORS_TEST_RATIO);
+    		motorsSetRatio(MOTORS[3], MOTORS_TEST_RATIO);
+		}
+	}
 }
 
 

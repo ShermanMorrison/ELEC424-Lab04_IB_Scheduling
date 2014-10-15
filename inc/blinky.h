@@ -14,6 +14,7 @@
  */
 #ifdef BRUSHLESS_MOTORCONTROLLER
 
+
 #define BLMC_PERIOD 0.005   // 5ms = 200Hz
 
 #define MOTORS_PWM_PRESCALE_RAW   7200 
@@ -104,3 +105,5 @@ const int MOTORS[] = { MOTOR_M1, MOTOR_M2, MOTOR_M3, MOTOR_M4 };
 static bool isInit = false;
 
 
+int TIM3_MOTOR_STATE = 0;
+int TIM4_MOTOR_STATE = 0;
