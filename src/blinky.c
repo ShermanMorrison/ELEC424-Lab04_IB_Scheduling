@@ -44,7 +44,9 @@ void InitializeInterrupt()
     nvic.NVIC_IRQChannelPreemptionPriority = 0;
     nvic.NVIC_IRQChannelSubPriority = 1;
     nvic.NVIC_IRQChannelCmd = ENABLE;
-    NVIC_Init(&nvic); // configure the timer 4 interrupt
+    NVIC_Init(&nvic); // configure the timer 2 interrupt
+
+
 }
 
 
@@ -63,10 +65,7 @@ void motorsInit()
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO | MOTORS_GPIO_PERIF, ENABLE);
   RCC_APB1PeriphClockCmd(MOTORS_GPIO_TIM_PERIF | MOTORS_GPIO_TIM_M3_4_PERIF, ENABLE);
   // Configure the GPIO for the timer output
-  GPIO_InitStructure.GPIO_Pin = (MOTORS_GPIO_M1 |
-                                 MOTORS_GPIO_M2 |
-                                 MOTORS_GPIO_M3 |
-                                 MOTORS_GPIO_M4);
+  GPIO_InitStructure.GPIO_Pin = (GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_8 | GPIO_Pin_9);
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_Init(MOTORS_GPIO_PORT, &GPIO_InitStructure);
@@ -75,14 +74,14 @@ void motorsInit()
   GPIO_PinRemapConfig(MOTORS_REMAP , ENABLE);
 
   //Timer configuration
-  TIM_TimeBaseStructure.TIM_Period = MOTORS_PWM_PERIOD; //TODO
-  TIM_TimeBaseStructure.TIM_Prescaler = MOTORS_PWM_PRESCALE; //TODO
+  TIM_TimeBaseStructure.TIM_Period = 7200; //TODO
+  TIM_TimeBaseStructure.TIM_Prescaler = 100; //TODO
   TIM_TimeBaseStructure.TIM_ClockDivision = 0;
   TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
   TIM_TimeBaseInit(MOTORS_GPIO_TIM_M1_2, &TIM_TimeBaseStructure);
 
-  TIM_TimeBaseStructure.TIM_Period = MOTORS_PWM_PERIOD;
-  TIM_TimeBaseStructure.TIM_Prescaler = MOTORS_PWM_PRESCALE;
+  TIM_TimeBaseStructure.TIM_Period = 7200;
+  TIM_TimeBaseStructure.TIM_Prescaler = 100;
   TIM_TimeBaseStructure.TIM_ClockDivision = 0;
   TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
   TIM_TimeBaseInit(MOTORS_GPIO_TIM_M3_4, &TIM_TimeBaseStructure);
@@ -118,24 +117,6 @@ void motorsInit()
   isInit = true;
 }
 
-bool motorsTest(void)
-{
-#ifndef BRUSHLESS_MOTORCONTROLLER
-  int i;
-
-  for (i = 0; i < sizeof(MOTORS) / sizeof(*MOTORS); i++)
-  {
-    motorsSetRatio(MOTORS[i], MOTORS_TEST_RATIO);
-    //vTaskDelay(M2T(MOTORS_TEST_ON_TIME_MS));
-    motorsSetRatio(MOTORS[i], 0);
-    //vTaskDelay(M2T(MOTORS_TEST_DELAY_TIME_MS));
-  }
-#endif
-
-  return isInit;
-}
-
-
 void motorsSetRatio(int id, uint16_t ratio)
 {
   switch(id)
@@ -157,7 +138,7 @@ void motorsSetRatio(int id, uint16_t ratio)
 
 
 /*
-* Interrupt Callback
+* Interrupt Callback for the LEDs, flips green light at 1hz
 */
 void TIM2_IRQHandler()
 {
@@ -170,35 +151,6 @@ void TIM2_IRQHandler()
     }
 }
 
-/*
-* TODO
-*/
-void TIM3_IRQHandler()
-{
-        // If interrupt set, reset interrupt and write the toggled led state
-    if (TIM_GetITStatus(TIM3, TIM_IT_Update)!= RESET)
-    {
-        TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
-        led_state = 1-led_state;
-        GPIO_WriteBit(GPIOB, GPIO_Pin_5, led_state);
-    }
-}
-
-/*
-* TODO
-*/
-void TIM4_IRQHandler()
-{
-        // If interrupt set, reset interrupt and write the toggled led state
-    if (TIM_GetITStatus(TIM3, TIM_IT_Update)!= RESET)
-    {
-        TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
-        led_state = 1-led_state;
-        GPIO_WriteBit(GPIOB, GPIO_Pin_5, led_state);
-    }
-}
-
-
 
 
 /*
@@ -208,11 +160,14 @@ int main()
 {
 	SystemInit();
 	motorsInit();
-	//motorsTest();
 	InitializeLEDs();
     InitializeLEDTimer();
-    //InitializeMotorsTimer(); //TODO
     InitializeInterrupt();
+    motorsSetRatio(1,20000);
+    motorsSetRatio(2,20000);
+    motorsSetRatio(3,20000);
+    motorsSetRatio(0,20000);
+    
     while(1);
     return(0);
 }
