@@ -1,19 +1,46 @@
-Lab04: Interrupt Based Scheduling
-<PUT NAMES HERE>
+Lab03: Blinky
+Chase E Stewart, Jonathan Wilson
 
-Part 1: 2
+Part 1: 6
 
-Q1. Briefly explain the clock path from start to finish (crystal to SYSCLK), including explanations for all your major register configurations.
+Q1. What is the main role of the linker script? 
 
-Part 2: 3
+The linker script lets the compiler know how to budget the different
+kinds of memory to be used in the program and where the locations of
+these memory parts are. It starts by telling the compiler which program
+to run at initialization, then it tells the beginning of the stack, the
+size to budget for stack and heap, and then specifically the sizes of 
+the different memory areas.
 
-Q2. Describe how you determined your PWM frequency.
 
-Q3. Describe how you would calculate CCR1 values for motors off, %50, and %100.
+Q2. What does the ENTRY command in the linker script do?
 
-Contribution
+The Entry command tells the compiler which function should be run first
+at the start of the program. If it were 'main', the program would begin
+by running the 'main' function. In the case of the example, however, 
+the entry function is 'ENTRY( Reset_Handler )', which causes the 
+program to start with the function 'Reset_Handler' instead.
 
-Indicate the percentage work contributed by each partner below (should add up to 100%). Needless to say, replace PARTNER1/2 with names.
 
-<PARTNER1>: 
-<PARTNER2>: 
+Q3. Where in the STM memory map are the three ELF segments placed (i.e. flash, sram, system memory)?
+
+from the .ld file, the three ELF statements are in these locations
+  FLASH (rx)      : ORIGIN = 0x08000000, LENGTH = 128K
+  RAM (xrw)       : ORIGIN = 0x20000000, LENGTH = 20K
+  MEMORY_B1 (rx)  : ORIGIN = 0x60000000, LENGTH = 0K
+
+
+Part 2: 4
+
+Q4. What role does the startup file (startup_stm32f10x_md.s) play?
+
+the startup file sets the initial stack pointer, sets the program
+counter equal to the reset handler, sets the vector table entries,
+and branches to main in the C library.
+
+
+Q5. Can you get the red LED to flash? Why is this harder? This is a good example of some of the challenges you will face with embedded devices and why the reference manual/STM-examples are key.
+
+In this case the red LED is connected to PB4, which is also the JNTRST pin, which is the JTAG reset pin. As we use JTAG to communicate with the crazyflie, sending a high/enable to the pin with it connected would cause problematic resetting on the crazyflie.
+
+
