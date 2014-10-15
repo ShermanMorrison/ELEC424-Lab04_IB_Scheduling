@@ -24,7 +24,7 @@ void InitializeLEDTimer()
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
     
     TIM_TimeBaseInitTypeDef timerInitStructure;
-    timerInitStructure.TIM_Prescaler = 8000;
+    timerInitStructure.TIM_Prescaler = 7200;
     timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
     timerInitStructure.TIM_Period = 1000;
     timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV2;
@@ -34,13 +34,11 @@ void InitializeLEDTimer()
     TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE); // enable interrupt on timer 4
 }
 
-/*
-void InitializeMotorTimer()
+void InitializeMotorsTimer()
 {
 
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
-
-    TIM_TimeBaseInitTypeDef timerMotor1InitStructure;
+    TIM_TimeBaseInitTypeDef timerInitStructure;
     timerInitStructure.TIM_Prescaler = 7200;
     timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
     timerInitStructure.TIM_Period = 20;
@@ -63,7 +61,6 @@ void InitializeMotorTimer()
     TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE); // enable interrupt on timer 4
 
 }
-*/
 
 
 /*
@@ -243,7 +240,7 @@ int main()
 	//motorsTest();
 	InitializeLEDs();
     InitializeLEDTimer();
-    //InitializeMotorTimer(); //TODO
+    //InitializeMotorsTimer(); //TODO
     InitializeInterrupt();
     while(1);
     return(0);

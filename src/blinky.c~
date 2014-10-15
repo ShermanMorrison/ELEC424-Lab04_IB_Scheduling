@@ -22,7 +22,7 @@ void InitializeTimer()
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
     
     TIM_TimeBaseInitTypeDef timerInitStructure;
-    timerInitStructure.TIM_Prescaler = 4000;
+    timerInitStructure.TIM_Prescaler = 7200;
     timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
     timerInitStructure.TIM_Period = 1000;
     timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV2;
@@ -30,6 +30,36 @@ void InitializeTimer()
     TIM_TimeBaseInit(TIM2, &timerInitStructure); // configure timer 4
     TIM_Cmd(TIM2, ENABLE); // enable the counter for timer 4
     TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE); // enable interrupt on timer 4
+}
+
+/*
+* Enable timer and set to interrupt.
+*/
+void InitializeMotorsTimer()
+{
+
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+    TIM_TimeBaseInitTypeDef timerInitStructure;
+    timerInitStructure.TIM_Prescaler = 7200;
+    timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    timerInitStructure.TIM_Period = 20;
+    timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV2;
+    timerInitStructure.TIM_RepetitionCounter = 0;
+    TIM_TimeBaseInit(TIM3, &timerInitStructure); // configure timer 4
+    TIM_Cmd(TIM3, ENABLE); // enable the counter for timer 4
+    TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE); // enable interrupt on timer 4
+
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+    TIM_TimeBaseInitTypeDef timerInitStructure2;
+    timerInitStructure2.TIM_Prescaler = 8000;
+    timerInitStructure2.TIM_CounterMode = TIM_CounterMode_Up;
+    timerInitStructure2.TIM_Period = 20;
+    timerInitStructure2.TIM_ClockDivision = TIM_CKD_DIV2;
+    timerInitStructure2.TIM_RepetitionCounter = 0;
+    TIM_TimeBaseInit(TIM4, &timerInitStructure2); // configure timer 4
+    TIM_Cmd(TIM4, ENABLE); // enable the counter for timer 4
+    TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE); // enable interrupt on timer 4
+
 }
 
 
