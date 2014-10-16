@@ -164,8 +164,8 @@ int main()
 	SystemInit();
 	motorsInit();
 	schedule();
-/*	InitializeLEDs();
-    InitializeLEDTimer();
+	InitializeLEDs();
+/*    InitializeLEDTimer();
     InitializeInterrupt();
 */
     
@@ -183,10 +183,11 @@ int main()
 	if ((functions/10000) % 2 == 1)
 		logDebugInfo();
 	
+	motorsSetRatio(0, motorSpeeds->m1);
 	motorsSetRatio(1, motorSpeeds->m2);
 	motorsSetRatio(2, motorSpeeds->m3);
 	motorsSetRatio(3, motorSpeeds->m4);
-	motorsSetRatio(0, motorSpeeds->m1);
+
 	
     }
     return(0);

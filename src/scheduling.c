@@ -49,14 +49,16 @@ void TIM2_IRQHandler()
 	    if (count == 10)
 	    {
 		functions = 00001;	
+		isCalled = 1;
 	    }
 	    if (count == 100)
-	    {
-		
+	    {		
 		functions = 00011;
+		isCalled = 1;
 	    }
 	    if (count == 995){
 		functions = 10000;
+		isCalled = 1;
 	    }
 
 	    if (count == 1000)
@@ -66,6 +68,7 @@ void TIM2_IRQHandler()
 		GPIO_WriteBit(GPIOB, GPIO_Pin_5, led);
 		functions = 01111;
 		count = 0;
+		isCalled = 1;
 	    }
 
     }
