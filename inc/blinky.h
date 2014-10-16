@@ -76,7 +76,7 @@ void motorsTestTask(void* params);
 
 /* then initialize the variable to control LED state */
 int led_state = 0;
-
+int led = 0;
 #define MOTORS_GPIO_TIM_PERIF     RCC_APB1Periph_TIM3
 #define MOTORS_GPIO_TIM_M1_2      TIM3
 #define MOTORS_GPIO_TIM_M1_2_DBG  DBGMCU_TIM3_STOP

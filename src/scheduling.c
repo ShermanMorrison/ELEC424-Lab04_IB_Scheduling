@@ -1,7 +1,5 @@
 #include <scheduling.h>
 
-int led = 0;
-
 /*
 * Enable timer and set to interrupt.
 */
@@ -11,13 +9,13 @@ void InitializeTimer()
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
     
     TIM_TimeBaseInitTypeDef timerInitStructure;
-    timerInitStructure.TIM_Prescaler = 8000;
+    timerInitStructure.TIM_Prescaler = 7200;
     timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
     timerInitStructure.TIM_Period = 1;
     timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
     timerInitStructure.TIM_RepetitionCounter = 0;
     TIM_TimeBaseInit(TIM2, &timerInitStructure); // configure timer
-    TIM_Cmd(TIM2, ENABLE); // enable the counter for timer
+    TIM_Cmd(TIM2, ENABLE); // ena1le the counter for timer
     TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE); // enable interrupt on timer
 }
 
@@ -44,7 +42,7 @@ void TIM2_IRQHandler()
     {
         TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
 
-	    count += 1;
+	    count ++;
 	    // If interrupt set, reset interrupt and write the toggled led state
 	    if (count == 10)
 	    {
@@ -62,8 +60,6 @@ void TIM2_IRQHandler()
 	    if (count == 1000)
 	    {
 
-		led = 1-led;
-		GPIO_WriteBit(GPIOB, GPIO_Pin_5, led);
 		functions = 01111;
 		count = 0;
 	    }

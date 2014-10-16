@@ -76,7 +76,7 @@ void motorsInit()
 
   //Timer configuration
   TIM_TimeBaseStructure.TIM_Period = 7200; //TODO
-  TIM_TimeBaseStructure.TIM_Prescaler = 100; //TODO
+  TIM_TimeBaseStructure.TIM_Prescaler = 100; 
   TIM_TimeBaseStructure.TIM_ClockDivision = 0;
   TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
   TIM_TimeBaseInit(MOTORS_GPIO_TIM_M1_2, &TIM_TimeBaseStructure);
@@ -180,6 +180,9 @@ int main()
 		calculateOrientation();
 	if ((functions/1000) % 2 == 1)
 		updatePid(motorSpeeds);
+                led = 1-led;
+                GPIO_WriteBit(GPIOB, GPIO_Pin_5, led);
+
 	if ((functions/10000) % 2 == 1)
 		logDebugInfo();
 	
