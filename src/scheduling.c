@@ -5,16 +5,16 @@ int led = 0;
 /*
 * Enable timer and set to interrupt.
 */
-void InitializeTimer(int tim, int pre, int per)
+void InitializeTimer()
 {
 
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
     
     TIM_TimeBaseInitTypeDef timerInitStructure;
-    timerInitStructure.TIM_Prescaler = 7200;
+    timerInitStructure.TIM_Prescaler = 8000;
     timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-    timerInitStructure.TIM_Period = 10;
-    timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV2;
+    timerInitStructure.TIM_Period = 1;
+    timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
     timerInitStructure.TIM_RepetitionCounter = 0;
     TIM_TimeBaseInit(TIM2, &timerInitStructure); // configure timer
     TIM_Cmd(TIM2, ENABLE); // enable the counter for timer
@@ -24,10 +24,10 @@ void InitializeTimer(int tim, int pre, int per)
 /*
 * Enable and initialize interrupt on timer
 */
-void InitializeInterruptGen(int TIM_IRQn)
+void InitializeInterruptGen()
 {
     NVIC_InitTypeDef nvic;
-    nvic.NVIC_IRQChannel = TIM_IRQn;
+    nvic.NVIC_IRQChannel = TIM2_IRQn;
     nvic.NVIC_IRQChannelPreemptionPriority = 0;
     nvic.NVIC_IRQChannelSubPriority = 1;
     nvic.NVIC_IRQChannelCmd = ENABLE;
@@ -58,8 +58,10 @@ void TIM2_IRQHandler()
 	    if (count == 995){
 		functions = 10000;
 	    }
+
 	    if (count == 1000)
 	    {
+
 		led = 1-led;
 		GPIO_WriteBit(GPIOB, GPIO_Pin_5, led);
 		functions = 01111;
@@ -72,8 +74,8 @@ void TIM2_IRQHandler()
 
 void schedule()
 {
-    InitializeTimer(TIM2_IRQn, 7200,10);
-    InitializeInterruptGen(TIM2_IRQn);
+    InitializeTimer();
+    InitializeInterruptGen();
 }
 
 

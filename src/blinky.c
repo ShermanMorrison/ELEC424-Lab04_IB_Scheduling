@@ -164,8 +164,8 @@ int main()
 	SystemInit();
 	motorsInit();
 	schedule();
-/*	InitializeLEDs();
-    InitializeLEDTimer();
+	InitializeLEDs();
+/*    InitializeLEDTimer();
     InitializeInterrupt();
 */
     
