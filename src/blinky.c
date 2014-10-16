@@ -11,31 +11,13 @@ void InitializeLEDs()
 {
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE); 
     GPIO_InitTypeDef gpioStructure;
-    gpioStructure.GPIO_Pin = GPIO_Pin_5;
+    gpioStructure.GPIO_Pin = (GPIO_Pin_4 | GPIO_Pin_5);
     gpioStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     gpioStructure.GPIO_Speed = GPIO_Speed_2MHz;
     GPIO_Init(GPIOB, &gpioStructure); // configure gpio pin 5
+    GPIO_PinRemapConfig( GPIO_Remap_SWJ_NoJTRST, ENABLE);
 }
 
-
-/*
-* Enable timer and set to interrupt.
-*/
-/*void InitializeLEDTimer()
-{
-
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
-    
-    TIM_TimeBaseInitTypeDef timerInitStructure;
-    timerInitStructure.TIM_Prescaler = 7200;
-    timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-    timerInitStructure.TIM_Period = 1000;
-    timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV2;
-    timerInitStructure.TIM_RepetitionCounter = 0;
-    TIM_TimeBaseInit(TIM2, &timerInitStructure); // configure timer
-    TIM_Cmd(TIM2, ENABLE); // enable the counter for timer
-    TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE); // enable interrupt on timer
-}*/
 
 /*
 * Enable and initialize interrupt on timer 2
@@ -75,7 +57,7 @@ void motorsInit()
   GPIO_PinRemapConfig(MOTORS_REMAP , ENABLE);
 
   //Timer configuration
-  TIM_TimeBaseStructure.TIM_Period = 7200; //TODO
+  TIM_TimeBaseStructure.TIM_Period = 7200;
   TIM_TimeBaseStructure.TIM_Prescaler = 100; 
   TIM_TimeBaseStructure.TIM_ClockDivision = 0;
   TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -140,58 +122,43 @@ void motorsSetRatio(int id, uint16_t ratio)
 }    
 
 
-/*
-* Interrupt Callback for the LEDs, flips green light at 1hz
-*/
-/*void TIM2_IRQHandler()
-{
-	// If interrupt set, reset interrupt and write the toggled led state
-    if (TIM_GetITStatus(TIM2, TIM_IT_Update)!= RESET)
-    {
-        TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
-        led_state = 1-led_state;
-        GPIO_WriteBit(GPIOB, GPIO_Pin_5, led_state);
-    }
-}
-*/
-
 
 /*
 * Main Function
 */
 int main()
-{
-	SystemInit();
-	motorsInit();
-	schedule();
-	InitializeLEDs();
-/*    InitializeLEDTimer();
-    InitializeInterrupt();
-*/
+{ 
+    //initial delay to give time to program
+    for(i=0; i<65535; i++)
+        for(j = 0; j<100;j++);
+    SystemInit();
+    motorsInit();
+    InitializeLEDs();
+    schedule();
     
     while(1){
 
-
-	if (isCalled){
-		isCalled = 0;
-		if (functions % 2 == 1)
-			detectEmergency();
-		if ((functions/10) % 2 == 1)
-			refreshSensorData();
-		if ((functions/100) % 2 == 1)
-			calculateOrientation();
-		if ((functions/1000) % 2 == 1)
-			updatePid(motorSpeeds);
-		if ((functions/10000) % 2 == 1)
-			logDebugInfo();
+        if (isCalled == 1){
+	    isCalled = 0;
+	    if (functions & 0x01 == 1)
+		detectEmergency();
+	    if (functions & 0x02 == 1)
+	        refreshSensorData();
+	    if (functions & 0x04 == 1)
+		calculateOrientation();
+	    if (functions & 0x08 == 1)
+		updatePid(motorSpeeds);
+            if (functions & 0x10 == 1)
+	        logDebugInfo();
 	
-		motorsSetRatio(0, motorSpeeds->m1);
-		motorsSetRatio(1, motorSpeeds->m2);
-		motorsSetRatio(2, motorSpeeds->m3);
-		motorsSetRatio(3, motorSpeeds->m4);
+            motorsSetRatio(0, motorSpeeds->m1);
+            motorsSetRatio(1, motorSpeeds->m2);
+	    motorsSetRatio(2, motorSpeeds->m3);
+	    motorsSetRatio(3, motorSpeeds->m4);
 	}
 	
     }
     return(0);
 }
+
 

@@ -1,5 +1,30 @@
 #include <scheduling.h>
 
+
+/*
+* Add a function to the queue
+*/
+void AddFunction(int *queue, int pos)
+{
+    if (pos<NUM_FUNCTIONS){
+        queue[pos]++;
+    }
+}
+
+int HandleFunction(int *queue)
+{
+    int l;
+    for(l=0; l<NUM_FUNCTIONS; l++)
+    {
+        if(queue[l]>0)
+        {
+            //TODO
+        }
+    }
+
+
+}
+
 /*
 * Enable timer and set to interrupt.
 */
@@ -41,31 +66,35 @@ void TIM2_IRQHandler()
     if (TIM_GetITStatus(TIM2, TIM_IT_Update)!= RESET)
     {
         TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
-
-	    count ++;
-	    // If interrupt set, reset interrupt and write the toggled led state
-	    if (count == 10)
-	    {
-		functions = 00001;	
-		isCalled = 1;
-	    }
-	    if (count == 100)
-	    {		
-		functions = 00011;
-		isCalled = 1;
-	    }
-	    if (count == 995){
-		functions = 10000;
-		isCalled = 1;
-	    }
-
-	    if (count == 1000)
-	    {
-
-		functions = 01111;
-		count = 0;
-		isCalled = 1;
-	    }
+        count ++;
+        // If interrupt set, reset interrupt and write the toggled led state
+        if (count % 10 == 0)
+        {
+            AddFunction(scheduled_functions, 1);	
+	    isCalled = 1;
+	}
+	if (count % 100 == 0)
+	{
+	    AddFunction(scheduled_functions, 2);
+            isCalled = 1;
+	}
+	if (count == 995)
+        {
+            green_state = 1-green_state;
+            if (green_state == 0)
+                red_state = 1-red_state;
+            GPIO_WriteBit(GPIOB, GPIO_Pin_5, green_state);
+            GPIO_WriteBit(GPIOB, GPIO_Pin_4, red_state);
+            AddFunction(scheduled_functions, 5);
+            isCalled = 1;
+	}
+	if (count == 1000)
+	{
+            AddFunction(scheduled_functions, 3);
+            AddFunction(scheduled_functions, 4);
+            count = 0;
+	    isCalled = 1;
+	}
 
     }
 
@@ -73,6 +102,8 @@ void TIM2_IRQHandler()
 
 void schedule()
 {
+    for(k=0;k<NUM_FUNCTIONS; k++)
+        scheduled_functions[k] =0;
     InitializeTimer();
     InitializeInterruptGen();
 }

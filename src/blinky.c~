@@ -76,7 +76,7 @@ void motorsInit()
 
   //Timer configuration
   TIM_TimeBaseStructure.TIM_Period = 7200; //TODO
-  TIM_TimeBaseStructure.TIM_Prescaler = 100; //TODO
+  TIM_TimeBaseStructure.TIM_Prescaler = 100; 
   TIM_TimeBaseStructure.TIM_ClockDivision = 0;
   TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
   TIM_TimeBaseInit(MOTORS_GPIO_TIM_M1_2, &TIM_TimeBaseStructure);
@@ -172,6 +172,7 @@ int main()
     while(1){
 
 
+<<<<<<< HEAD
 	if (functions % 2 == 1)
 		detectEmergency();
 	if ((functions/10) % 2 == 1)
@@ -180,14 +181,32 @@ int main()
 		calculateOrientation();
 	if ((functions/1000) % 2 == 1)
 		updatePid(motorSpeeds);
+                led = 1-led;
+                GPIO_WriteBit(GPIOB, GPIO_Pin_5, led);
+
 	if ((functions/10000) % 2 == 1)
 		logDebugInfo();
-	
-	motorsSetRatio(0, motorSpeeds->m1);
-	motorsSetRatio(1, motorSpeeds->m2);
-	motorsSetRatio(2, motorSpeeds->m3);
-	motorsSetRatio(3, motorSpeeds->m4);
+=======
+	if (isCalled){
+		isCalled = 0;
 
+		if (functions % 2 == 1)
+			detectEmergency();
+		if ((functions/10) % 2 == 1)
+			refreshSensorData();
+		if ((functions/100) % 2 == 1)
+			calculateOrientation();
+		if ((functions/1000) % 2 == 1)
+			updatePid(motorSpeeds);
+		if ((functions/10000) % 2 == 1)
+			logDebugInfo();
+>>>>>>> e420ba387ec19be95cd71461cc193c3838541c48
+	
+		motorsSetRatio(0, motorSpeeds->m1);
+		motorsSetRatio(1, motorSpeeds->m2);
+		motorsSetRatio(2, motorSpeeds->m3);
+		motorsSetRatio(3, motorSpeeds->m4);
+	}
 	
     }
     return(0);
