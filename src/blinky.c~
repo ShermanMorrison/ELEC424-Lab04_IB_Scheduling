@@ -172,11 +172,14 @@ int main()
 
 	if (functions % 2 == 1)
 		detectEmergency();
-	
-	refreshSensorData();
-	calculateOrientation();
-	updatePid(motorSpeeds);
-	logDebugInfo();
+	if ((functions/10) % 2 == 1)
+		refreshSensorData();
+	if ((functions/100) % 2 == 1)
+		calculateOrientation();
+	if ((functions/1000) % 2 == 1)
+		updatePid(motorSpeeds);
+	if ((functions/10000) % 2 == 1)
+		logDebugInfo();
 	
 	motorsSetRatio(1, motorSpeeds->m2);
 	motorsSetRatio(2, motorSpeeds->m3);

@@ -13,7 +13,7 @@ void InitializeTimer(int tim, int pre, int per)
     TIM_TimeBaseInitTypeDef timerInitStructure;
     timerInitStructure.TIM_Prescaler = 7200;
     timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-    timerInitStructure.TIM_Period = 1000;
+    timerInitStructure.TIM_Period = 10;
     timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV2;
     timerInitStructure.TIM_RepetitionCounter = 0;
     TIM_TimeBaseInit(TIM5, &timerInitStructure); // configure timer
@@ -45,25 +45,19 @@ void TIM5_IRQHandler()
     if (count == 10)
     {
 	functions = 00001;	
-	detectEmergency();
     }
     if (count == 100)
     {
 	functions = 00011;
-	detectEmergency();
-	refreshSensorData();
     }
     if (count == 995){
 	functions = 10000;
-	logDebugInfo();
+;
     }
     if (count == 1000)
     {
 	functions = 01111;
-	detectEmergency();
-	refreshSensorData();
-	calculateOrientation();
-	updatePid(motorSpeeds);
+	count = 0;
     }
 }
 
