@@ -4,6 +4,7 @@
 #include <stm32f10x_rcc.h>
 #include <misc.h>
 #include <stdbool.h>
+#include <scheduling.h>
 
 /**
  * Generates a PWM wave (50 - 200 Hz update rate with 1-2 ms high pulse) using the timer. That way we can use the same

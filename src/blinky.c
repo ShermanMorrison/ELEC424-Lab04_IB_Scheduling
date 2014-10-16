@@ -30,13 +30,13 @@ void InitializeLEDTimer()
     timerInitStructure.TIM_Period = 1000;
     timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV2;
     timerInitStructure.TIM_RepetitionCounter = 0;
-    TIM_TimeBaseInit(TIM2, &timerInitStructure); // configure timer 2
-    TIM_Cmd(TIM2, ENABLE); // enable the counter for timer 2
-    TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE); // enable interrupt on timer 4
+    TIM_TimeBaseInit(TIM2, &timerInitStructure); // configure timer
+    TIM_Cmd(TIM2, ENABLE); // enable the counter for timer
+    TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE); // enable interrupt on timer
 }
 
 /*
-* Enable and initialize interrupt on timer 4
+* Enable and initialize interrupt on timer 2
 */
 void InitializeInterrupt()
 {
@@ -46,8 +46,6 @@ void InitializeInterrupt()
     nvic.NVIC_IRQChannelSubPriority = 1;
     nvic.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&nvic); // configure the timer 2 interrupt
-
-
 }
 
 
@@ -146,12 +144,12 @@ void motorsSetRatio(int id, uint16_t ratio)
 void TIM2_IRQHandler()
 {
 	// If interrupt set, reset interrupt and write the toggled led state
-/*    if (TIM_GetITStatus(TIM2, TIM_IT_Update)!= RESET)
+    if (TIM_GetITStatus(TIM2, TIM_IT_Update)!= RESET)
     {
         TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
         led_state = 1-led_state;
         GPIO_WriteBit(GPIOB, GPIO_Pin_5, led_state);
-    }*/
+    }
 }
 
 
@@ -163,15 +161,32 @@ int main()
 {
 	SystemInit();
 	motorsInit();
+	schedule();
 	InitializeLEDs();
     InitializeLEDTimer();
     InitializeInterrupt();
-    motorsSetRatio(1,20000);
-    motorsSetRatio(2,20000);
-    motorsSetRatio(3,20000);
-    motorsSetRatio(0,20000);
+
     
-    while(1);
+    while(1){
+
+
+	if (functions % 2 == 1)
+		detectEmergency();
+	if ((functions/10) % 2 == 1)
+		refreshSensorData();
+	if ((functions/100) % 2 == 1)
+		calculateOrientation();
+	if ((functions/1000) % 2 == 1)
+		updatePid(motorSpeeds);
+	if ((functions/10000) % 2 == 1)
+		logDebugInfo();
+	
+	motorsSetRatio(1, motorSpeeds->m2);
+	motorsSetRatio(2, motorSpeeds->m3);
+	motorsSetRatio(3, motorSpeeds->m4);
+	motorsSetRatio(0, motorSpeeds->m1);
+	
+    }
     return(0);
 }
 
