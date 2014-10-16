@@ -172,24 +172,24 @@ int main()
     while(1){
 
 
-	if (functions % 2 == 1)
-		detectEmergency();
-	if ((functions/10) % 2 == 1)
-		refreshSensorData();
-	if ((functions/100) % 2 == 1)
-		calculateOrientation();
-	if ((functions/1000) % 2 == 1)
-		updatePid(motorSpeeds);
-                led = 1-led;
-                GPIO_WriteBit(GPIOB, GPIO_Pin_5, led);
-
-	if ((functions/10000) % 2 == 1)
-		logDebugInfo();
+	if (isCalled){
+		isCalled = 0;
+		if (functions % 2 == 1)
+			detectEmergency();
+		if ((functions/10) % 2 == 1)
+			refreshSensorData();
+		if ((functions/100) % 2 == 1)
+			calculateOrientation();
+		if ((functions/1000) % 2 == 1)
+			updatePid(motorSpeeds);
+		if ((functions/10000) % 2 == 1)
+			logDebugInfo();
 	
-	motorsSetRatio(1, motorSpeeds->m2);
-	motorsSetRatio(2, motorSpeeds->m3);
-	motorsSetRatio(3, motorSpeeds->m4);
-	motorsSetRatio(0, motorSpeeds->m1);
+		motorsSetRatio(0, motorSpeeds->m1);
+		motorsSetRatio(1, motorSpeeds->m2);
+		motorsSetRatio(2, motorSpeeds->m3);
+		motorsSetRatio(3, motorSpeeds->m4);
+	}
 	
     }
     return(0);
