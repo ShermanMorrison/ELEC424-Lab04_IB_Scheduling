@@ -1,0 +1,29 @@
+Lab04: Interrupt Based Scheduling
+Chase E Stewart, Jonathan Wilson
+
+Part 1: 2
+Q1. Briefly explain the clock path from start to finish (crystal to SYSCLK), including explanations for all your major register configurations.
+
+
+
+Part 2: 3
+Q2. Describe how you determined your PWM frequency.
+
+First, I looked online to find the period of the PWM signals and 
+saw 10msec was a period within requirements. When I determined this, 
+I set up the timer with the appropriate prescaler and period values 
+in order to set PWM as required.
+
+Q3. Describe how you would calculate CCR1 values for motors off, %50, and %100.
+
+to set motors off, you need a CCR1 equal to 1msec
+
+to set motors at 50%, you need a CCR1 equal to 1.5msec
+
+to set motors at 100%, you need a CCR1 equal to 2msec
+
+
+Contribution
+Indicate the percentage work contributed by each partner below (should add up to 100%). Needless to say, replace PARTNER1/2 with names.
+<PARTNER1>:
+<PARTNER2>: 
