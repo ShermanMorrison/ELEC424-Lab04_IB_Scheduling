@@ -16,6 +16,11 @@ in order to set PWM as required.
 
 Q3. Describe how you would calculate CCR1 values for motors off, %50, and %100.
 
+to set motors off, you need a CCR1 equal to 1msec
+
+to set motors at 50%, you need a CCR1 equal to 1.5msec
+
+to set motors at 100%, you need a CCR1 equal to 2msec
 
 
 Contribution
