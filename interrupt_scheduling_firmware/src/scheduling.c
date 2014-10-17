@@ -64,7 +64,7 @@ void TIM2_IRQHandler()
         {
             // run required scheduler functions
             MotorSpeeds motorSpeeds = {0,0,0,0};
-            flag = 1;
+            calcOrientFlag = 1;
             
             // runs updatePid to get motors to turn on and then set as required
             updatePid(&motorSpeeds);

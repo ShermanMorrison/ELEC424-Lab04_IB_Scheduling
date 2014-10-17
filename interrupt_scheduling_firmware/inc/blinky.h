@@ -6,6 +6,8 @@
 #include <stdbool.h>
 #include <scheduling.h>
 
+#ifdef BRUSHLESS_MOTORCONTROLLER 
+
 #define BLMC_PERIOD 0.005   // 5ms = 200Hz
 
 #define MOTORS_PWM_PRESCALE_RAW   7200 
