@@ -6,16 +6,6 @@
 #include <stdbool.h>
 #include <scheduling.h>
 
-/**
- * Generates a PWM wave (50 - 200 Hz update rate with 1-2 ms high pulse) using the timer. That way we can use the same
- * base as for the regular PWM driver. This means it will be a PWM with a period of the update rate configured to be high
- * only in the 1-2 ms range.
- * The BLMC input signal are meant to be connected to the Crazyflie round motor solder pad (open-drain output). A resistor
- * around 470 ohm needs to pull the signal high to the voltage level of the BLMC (normally 5V).
- */
-#ifdef BRUSHLESS_MOTORCONTROLLER
-
-
 #define BLMC_PERIOD 0.005   // 5ms = 200Hz
 
 #define MOTORS_PWM_PRESCALE_RAW   7200 
@@ -53,12 +43,6 @@
 void motorsInit();
 
 /**
- * Test of the motor modules. The test will spin each motor very short in
- * the sequence M1 to M4.
- */
-bool motorsTest(void);
-
-/**
  * Set the PWM ratio of the motor 'id'
  */
 void motorsSetRatio(int id, uint16_t ratio);
@@ -67,11 +51,6 @@ void motorsSetRatio(int id, uint16_t ratio);
  * Get the PWM ratio of the motor 'id'. Return -1 if wrong ID.
  */
 int motorsGetRatio(int id);
-
-/**
- * FreeRTOS Task to test the Motors driver
- */
-void motorsTestTask(void* params);
 
 
 /* then initialize the variable to control LED state */

@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <unistd.h>
 
+int calcOrientFlag = 0; // this flag will ensure calcOrientation runs every second but in main
+
 
 /*
 * Initialize GPIOB's  GPIO_Pin_5 as a push-pull GPIOB pin.
@@ -15,9 +17,8 @@ void InitializeLEDs()
     gpioStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     gpioStructure.GPIO_Speed = GPIO_Speed_2MHz;
     GPIO_Init(GPIOB, &gpioStructure); // configure gpio pin 5
-    GPIO_PinRemapConfig( GPIO_Remap_SWJ_NoJTRST, ENABLE);
+    GPIO_PinRemapConfig( GPIO_Remap_SWJ_NoJTRST, ENABLE);//remove JNTRST so that red LED can flash
 }
-
 
 /*
 * Enable and initialize interrupt on timer 2
@@ -128,37 +129,26 @@ void motorsSetRatio(int id, uint16_t ratio)
 */
 int main()
 { 
-    //initial delay to give time to program
+    // initial delay to give time to program
     for(i=0; i<65535; i++)
-        for(j = 0; j<100;j++);
+        for(j = 0; j<50;j++);
+    // initialize everything
     SystemInit();
     motorsInit();
     InitializeLEDs();
     schedule();
-    
-    while(1){
 
-        if (isCalled == 1){
-	    isCalled = 0;
-	    if (functions & 0x01 == 1)
-		detectEmergency();
-	    if (functions & 0x02 == 1)
-	        refreshSensorData();
-	    if (functions & 0x04 == 1)
-		calculateOrientation();
-	    if (functions & 0x08 == 1)
-		updatePid(motorSpeeds);
-            if (functions & 0x10 == 1)
-	        logDebugInfo();
-	
-            motorsSetRatio(0, motorSpeeds->m1);
-            motorsSetRatio(1, motorSpeeds->m2);
-	    motorsSetRatio(2, motorSpeeds->m3);
-	    motorsSetRatio(3, motorSpeeds->m4);
-	}
-	
+    // after initializing, run log debug info when time permits
+    // and run calcOrientation every second but have it interruptible by having it in main
+    while(1)
+    {
+        if (calcOrientFlag ==1)
+        {
+            calculateOrientation();
+            calcOrientFlag =0; 
+        }
+        logDebugInfo();
     }
     return(0);
 }
-
 
